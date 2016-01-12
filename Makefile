@@ -13,6 +13,11 @@ CFLAGS = -std=c++11
 LFLAGS = -static
 else
 ifeq ($(AIR_TARGET_OS),Windows)
+
+ifndef $(AIR_MINGW_PATH)
+$(error "Need to invoke make with path to MINGW like make AIR_MINGW_PATH=/c/MinGW")
+endif
+
 CC      = $(AIR_MINGW_PATH)/bin/g++
 CC1     = $(AIR_MINGW_PATH)/bin/gcc
 LD      = $(AIR_MINGW_PATH)/bin/g++
