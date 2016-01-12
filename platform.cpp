@@ -4,8 +4,16 @@
 #include <cstdlib>
 #include <stdexcept>
 
+
+
 #if defined(AIR_INSTALLER_PLATFORM_UNIX)
 #include <sys/stat.h>
+#endif
+
+#if defined (AIR_INSTALLER_PLATFORM_WINDOWS)
+
+#include <iostream>
+#include "Windows.h"
 #endif
 
  platform_t::platform_t() // may be null
@@ -33,14 +41,22 @@
    bool platform_t::set_bin_dir(std::string const & name) { m_bin_dir = name; return true;}
    void platform_t::set_defaults()
    {
+     const char* subdirs[] = {"lib_dummy","stuff"};
 #if defined(AIR_INSTALLER_PLATFORM_UNIX)
      // set lib dir to $HOME 
      const char* str_home = getenv("HOME");
+#elif defined (AIR_INSTALLER_PLATFORM_WINDOWS)
+     const char*  str_home = getenv("USERPROFILE");
+#else
+#error "shouldnt get here"
+#endif
      if ( str_home){
         std::string lib_dir = str_home;
+        	        
+     #if defined(AIR_INSTALLER_PLATFORM_UNIX)   
         struct stat sb;
-         if ( (stat(lib_dir.c_str(), &sb) == 0) && S_ISDIR(sb.st_mode) ){
-             const char* subdirs[] = {"lib_dummy","stuff"};
+        if ( (stat(lib_dir.c_str(), &sb) == 0) && S_ISDIR(sb.st_mode) ){
+             
              for ( uint32_t i = 0; i < (sizeof(subdirs) / sizeof(subdirs[0])); ++i){
                   lib_dir += "/";
                   lib_dir += subdirs[i];
@@ -59,14 +75,33 @@
              this->set_lib_dir(lib_dir);
              this->set_bin_dir(lib_dir);
          }
+      #else
+          DWORD flags = GetFileAttributes(lib_dir.c_str());
+          if ( (flags != INVALID_FILE_ATTRIBUTES) && ( flags & FILE_ATTRIBUTE_DIRECTORY) ){
+           for ( uint32_t i = 0; i < (sizeof(subdirs) / sizeof(subdirs[0])); ++i){
+			  lib_dir += "\\";
+			  lib_dir += subdirs[i];
+			  flags = GetFileAttributes(lib_dir.c_str());
+			  if ((flags != INVALID_FILE_ATTRIBUTES) && ( flags & FILE_ATTRIBUTE_DIRECTORY) ){
+				 // subdir exists already
+				 continue;
+			  }else{
+                 if ( !CreateDirectory(lib_dir.c_str(), NULL) ){
+                    throw std::runtime_error("faied to create def bin and lib subdirs");
+                 }
+			  }
+            }
+            this->set_lib_dir(lib_dir);
+            this->set_bin_dir(lib_dir);
+          }else{
+            throw std::runtime_error("faied to create def bin and lib dir");
+          }
+      #endif
+         
      }else{
          throw std::runtime_error("couldnt get home dir");
      }
-#elif defined (AIR_INSTALLER_PLATFORM_WINDOWS)
-     // for windows try getenv("HOMEDRIVE") getenv("HOMEPATH")
-      
-      "Windows"
-#endif
+
    }
 namespace {
    platform_t*  platform = nullptr;
