@@ -3,7 +3,7 @@
 #include "stage.hpp"
 #include <cstdlib>
 #include <stdexcept>
-
+#include <iostream>
 
 
 #if defined(AIR_INSTALLER_PLATFORM_UNIX)
@@ -27,20 +27,32 @@
    // todo to dif between e.g pc and raspberry pi
    m_processor{""} 
    {
+    if ( get_verbose()){
+         std::cout << "Air Installer on " << m_os <<'\n';
+        // std::cout << "Created stage dir in \"" << get_temp_dir() << "\"\n";
+    }
      this->set_defaults();
    }
-   std::string  platform_t::get_OS() const { return m_os;}
-   std::string  platform_t::get_processor() const {return m_processor;}
+   std::string const & platform_t::get_OS() const { return m_os;}
+   std::string const & platform_t::get_processor() const {return m_processor;}
+   std::string const & platform_t::get_temp_dir() const
+   {
+      return get_stage()->get_temp_dir_name();
+   }
+   bool platform_t::set_temp_dir(std::string const & dir)
+   {
+       return  m_stage.set_dir(dir);
+   }
    stage_t const * platform_t::get_stage()const
    { 
       return &m_stage;
    }
-   std::string platform_t::get_lib_dir() const {return m_lib_dir;}
+   std::string const & platform_t::get_lib_dir() const {return m_lib_dir;}
    bool platform_t::set_lib_dir(std::string const & name) { m_lib_dir = name; return true;}
-   std::string platform_t::get_bin_dir() const {return m_bin_dir;}
+   std::string const & platform_t::get_bin_dir() const {return m_bin_dir;}
    bool platform_t::set_bin_dir(std::string const & name) { m_bin_dir = name; return true;}
    void platform_t::set_defaults()
-   {
+   { // for testing
      const char* subdirs[] = {"lib_dummy","stuff"};
 #if defined(AIR_INSTALLER_PLATFORM_UNIX)
      // set lib dir to $HOME 
@@ -62,7 +74,7 @@
                   lib_dir += subdirs[i];
                   // continue making dirs
                     if ( stat(lib_dir.c_str(), &sb) == 0){
-                           if S_ISDIR(sb.st_mode){
+                           if (S_ISDIR(sb.st_mode)){
                               continue;
                            }else{
                               throw std::runtime_error("def home lib failed"); 
@@ -72,8 +84,8 @@
                        system(cmd.c_str());
                     }
              }
-             this->set_lib_dir(lib_dir);
-             this->set_bin_dir(lib_dir);
+             this->set_lib_dir(lib_dir + "/");
+             this->set_bin_dir(lib_dir + "/");
          }
       #else
           DWORD flags = GetFileAttributes(lib_dir.c_str());
@@ -91,8 +103,8 @@
                  }
 			  }
             }
-            this->set_lib_dir(lib_dir);
-            this->set_bin_dir(lib_dir);
+            this->set_lib_dir(lib_dir + "\\");
+            this->set_bin_dir(lib_dir + "\\");
           }else{
             throw std::runtime_error("faied to create def bin and lib dir");
           }

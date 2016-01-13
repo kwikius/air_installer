@@ -9,4 +9,7 @@
 #error "unknown platform"
 #endif
 
+bool get_verbose();
+void set_verbose( bool b);
+
 #endif // AIR_INSTALLER_CONFIG_HPP_INCLUDED

@@ -7,14 +7,16 @@
 struct platform_t{
    platform_t();
    stage_t const * get_stage() const;
-   std::string get_OS() const;
-   std::string  get_processor() const ;
+   std::string const & get_OS() const;
+   std::string const & get_processor() const ;
 
    virtual ~platform_t(){}
    bool set_lib_dir(std::string const & dir);
    bool set_bin_dir(std::string const & dir);
-   std::string get_lib_dir() const ;
-   std::string get_bin_dir() const ;
+   bool set_temp_dir(std::string const & dir);
+   std::string const & get_lib_dir() const ;
+   std::string const & get_bin_dir() const ;
+   std::string const & get_temp_dir() const;
    static std::string get_dir_sep();
 private:
    void set_defaults();

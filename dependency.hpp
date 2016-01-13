@@ -22,6 +22,5 @@ struct dependency_t{
       int m_id;
 };
 
-std::vector<dependency_t*>* get_deps_list();
 
 #endif // AIR_INSTALLER_DEPENDENCY_HPP_INCLUDED
