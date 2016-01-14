@@ -1,12 +1,13 @@
+#include<cstdlib>
+#include <fstream>
+#include <stdexcept>
+#include <iostream>
 
 #include "config.hpp"
 #include "dependency.hpp"
 #include "stage.hpp"
 #include "platform.hpp"
 #include "file_utils.hpp"
-#include <fstream>
-#include <stdexcept>
-#include <iostream>
 
 namespace {
    struct dep_arm_none_eabi : dependency_t{
@@ -81,12 +82,18 @@ namespace {
       // stage here ( uncompress/extract the dir from compressed file)
       std::string old_wkg_dir = get_working_dir();
       change_wkg_dir_to(get_platform()->get_temp_dir());
-      
+      #if defined(AIR_INSTALLER_PLATFORM_WINDOWS)
+      // the windows zip doesnt have the top level dir
+      // so we have to make the subdir to unzip it into
+	  std::string subdir_cmd = "mkdir " + m_toolchain_version;
+	  system (subdir_cmd.c_str());
+      #endif
       std::string cmd = 
       #if defined(AIR_INSTALLER_PLATFORM_UNIX)
          "tar xvjf " 
       #elif defined(AIR_INSTALLER_PLATFORM_WINDOWS)
-         "gzip -d "
+         // unzip into subdir we made
+         "unzip -d " + m_toolchain_version + " "
       #endif
           + retrieved_url;
       if ( system(cmd.c_str()) == -1){
@@ -103,9 +110,8 @@ namespace {
    // return true if on exit gcc dir is installed
    bool dep_arm_none_eabi::move_dir()
    {
-       // gcc dir is not installed but may be staged
        std::string staged_path = get_platform()->get_temp_dir() + m_toolchain_version; 
-       std::cout << staged_path <<'\n';
+       std::cout << "staged path = " << staged_path << '\n';
        if ( !dir_exists(staged_path)){
           stage_dir();
        }
@@ -116,17 +122,20 @@ namespace {
        if ( system(cmd.c_str()) == -1){
          change_wkg_dir_to(old_wkg_dir);
          throw std::runtime_error("move failed\n");
-       }  else{
+       }else{
          change_wkg_dir_to(old_wkg_dir);
          std::cout << "move successful\n";
          return true;
-      }
+       }
    }
 
    bool dep_arm_none_eabi::install()
    {
        std::string installed_path = get_platform()->get_bin_dir() + m_toolchain_version; 
-       std::cout << installed_path <<'\n';
+       std::cout << "installed path = " << installed_path <<'\n';
+       if (dir_exists(installed_path)){
+    	   std::cout << "dir_exists(installed_path)\n";
+       }
        return dir_exists(installed_path) || move_dir();
    }
 
