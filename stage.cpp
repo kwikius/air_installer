@@ -37,10 +37,10 @@
       // so may be best to tell user
       for(int file_idx = 0;file_idx < 256; ++file_idx){
           std::string temp_dir_name = dir_name_cstr;
-          temp_dir_name += "\\air_tool_temp_";
+          temp_dir_name += "air_tool_temp_";
           char fileidx_cstr [5];
           sprintf(fileidx_cstr,"%x",file_idx);
-          temp_dir_name += file_idx;
+          temp_dir_name += fileidx_cstr;
           bool temp_dir_created = CreateDirectory(temp_dir_name.c_str(), NULL);
           if (temp_dir_created){
         	   m_temp_dir_name = temp_dir_name  + '\\';
@@ -49,7 +49,9 @@
       }
 	  if ( m_temp_dir_name == ""){
 		 throw std::runtime_error("failed to create temp dir");
-	  } 
+	  } else{
+		 std::cout << "temp dir name = " << m_temp_dir_name;
+	  }
    #endif  // (AIR_INSTALLER_PLATFORM_WINDOWS)
    }
 
