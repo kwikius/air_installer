@@ -18,7 +18,6 @@ namespace {
        bool uninstall();
        bool move_dir();
        bool stage_dir();
-       bool uncompress_file();
        bool retrieve_file();
        
    private:
