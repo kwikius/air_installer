@@ -14,7 +14,7 @@ LFLAGS = -static
 else
 ifeq ($(AIR_TARGET_OS),Windows)
 
-ifndef $(AIR_MINGW_PATH)
+ifeq ($(AIR_MINGW_PATH), )
 $(error "Need to invoke make with path to MINGW like make AIR_MINGW_PATH=/c/MinGW")
 endif
 
