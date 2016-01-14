@@ -25,6 +25,7 @@ private:
    std::string m_lib_dir;
    std::string m_bin_dir;
    stage_t     m_stage;
+   friend platform_t* get_platform();
 };
 
 platform_t* get_platform();
