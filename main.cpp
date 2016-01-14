@@ -45,7 +45,7 @@ bool parse_args(int argc , const char* argv[])
             }
             
          }else{
-            std::cout << "xpected temp dir name\n";
+            std::cout << "expected temp dir name\n";
             return false;
          }
       }else{
