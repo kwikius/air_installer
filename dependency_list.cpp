@@ -7,7 +7,7 @@ dependency_t* make_dependency( int id)
 {
    switch ( id ){
      case dependency_t::ARM_NONE_EABI_GCC:
-         return make_dependency_arm_non_eabi_gcc();
+         return make_dependency_arm_none_eabi_gcc();
      case dependency_t::MAVLINK:
          return make_dependency_mavlink();
      case dependency_t::FREERTOS:
