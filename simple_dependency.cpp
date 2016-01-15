@@ -2,48 +2,37 @@
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
+#include <cassert>
 
 #include "config.hpp"
-#include "dependency.hpp"
+#include "simple_dependency.hpp"
 #include "stage.hpp"
 #include "platform.hpp"
 #include "file_utils.hpp"
 
-namespace {
-   struct dep_arm_none_eabi : dependency_t{
-       dep_arm_none_eabi(): dependency_t{ARM_NONE_EABI_GCC}
-       ,m_toolchain_version{"gcc-arm-none-eabi-5_2-2015q4"}
-       {}
-       bool install();
-       bool uninstall();
-       bool move_dir();
-       bool stage_dir();
-       bool retrieve_file();
-       
-   private:
-       std::string m_toolchain_version;
-   };
+   std::string simple_dependency_t::get_target_dir()
+   {
+       if ( m_flags & target_dir_bin){
+         return get_platform()->get_bin_dir(); 
+       }else{
+         return get_platform()->get_lib_dir(); 
+       }
+   }
 
    // on entry file not retrieved
    // return true if on exit retrieved file is in temp dir
-   bool dep_arm_none_eabi::retrieve_file()
+   bool simple_dependency_t::retrieve_file()
    {
-      std::string src_file = m_toolchain_version +
-      #if defined(AIR_INSTALLER_PLATFORM_UNIX)
-          "-20151219-linux.tar.bz2";
-      #elif defined(AIR_INSTALLER_PLATFORM_WINDOWS)
-          "-20151219-win32.zip";
-      #endif
-      std::string src_url = get_zoomworks_platform_deps_dir() + src_file;
       std::string old_wkg_dir = get_working_dir();
       change_wkg_dir_to(get_platform()->get_temp_dir());
 
-      std::string cmd = "wget --no-clobber --directory-prefix=" + get_platform()->get_temp_dir() + " " + src_url;
+      std::string cmd = "wget --no-clobber --directory-prefix=" + get_platform()->get_temp_dir() 
+         + " " + m_src_dir_url + m_src_filename;
       int result = system(cmd.c_str());
 
       if ( result == -1){
          // clean up . Possibly partially downloaded file
-         std::string stage_src_file = get_platform()->get_temp_dir() + src_file;
+         std::string stage_src_file = get_platform()->get_temp_dir() + m_src_filename;
          if (file_exists(stage_src_file)){  
             cmd = "rm " + stage_src_file;
             system(cmd.c_str());
@@ -57,15 +46,10 @@ namespace {
 
    // on entry dir is not staged
    // return true if on exit the staged dir is in the temp dir
-   bool dep_arm_none_eabi::stage_dir()
+   bool simple_dependency_t::stage_dir()
    {
       // dir is not staged but may have been retrieved
-      std::string retrieved_url = get_platform()->get_temp_dir() + m_toolchain_version + 
-      #if defined(AIR_INSTALLER_PLATFORM_UNIX)
-             "-20151219-linux.tar.bz2";
-      #elif defined(AIR_INSTALLER_PLATFORM_WINDOWS)
-             "-20151219-win32.zip";
-      #endif
+      std::string retrieved_url = get_platform()->get_temp_dir() + m_src_filename;
       std::cout << retrieved_url <<'\n';
       if (!file_exists( retrieved_url) ) {
          retrieve_file();
@@ -73,20 +57,15 @@ namespace {
       // stage here ( uncompress/extract the dir from compressed file)
       std::string old_wkg_dir = get_working_dir();
       change_wkg_dir_to(get_platform()->get_temp_dir());
-      #if defined(AIR_INSTALLER_PLATFORM_WINDOWS)
-      // the windows zip doesnt have the top level dir
-      // so we have to make the subdir to unzip it into
-	  std::string subdir_cmd = "mkdir " + m_toolchain_version;
-	  system (subdir_cmd.c_str());
-      #endif
-      std::string cmd = 
-      #if defined(AIR_INSTALLER_PLATFORM_UNIX)
-         "tar xvjf " 
-      #elif defined(AIR_INSTALLER_PLATFORM_WINDOWS)
-         // unzip into subdir we made
-         "unzip -d " + m_toolchain_version + " "
-      #endif
-          + retrieved_url;
+     
+      std::string cmd ;
+      if ( m_flags & compressed_type_bz2){
+         cmd = "tar xvjf " + retrieved_url;
+      }else{
+         assert( m_flags & compressed_type_zip);
+         cmd = "unzip " + retrieved_url;
+      }
+      
       if ( system(cmd.c_str()) == -1){
          change_wkg_dir_to(old_wkg_dir);
          throw std::runtime_error("decompress failed\n");
@@ -99,17 +78,17 @@ namespace {
 
    // on entry gcc dir not installed
    // return true if on exit gcc dir is installed
-   bool dep_arm_none_eabi::move_dir()
+   bool simple_dependency_t::move_dir()
    {
-       std::string staged_path = get_platform()->get_temp_dir() + m_toolchain_version; 
+       std::string staged_path = get_platform()->get_temp_dir() + m_staged_name; 
        std::cout << "staged path = " << staged_path << '\n';
        if ( !dir_exists(staged_path)){
           stage_dir();
        }
-       // move staged dir to bin dir
+       // move staged dir to target dir
        std::string old_wkg_dir = get_working_dir();
        change_wkg_dir_to(get_platform()->get_temp_dir());
-       std::string cmd = "mv " + staged_path + " " + get_platform()->get_bin_dir() + m_toolchain_version;
+       std::string cmd = "mv " + staged_path + " " + get_target_dir() + m_target_name;
        if ( system(cmd.c_str()) == -1){
          change_wkg_dir_to(old_wkg_dir);
          throw std::runtime_error("move failed\n");
@@ -120,9 +99,9 @@ namespace {
        }
    }
 
-   bool dep_arm_none_eabi::install()
+   bool simple_dependency_t::install()
    {
-       std::string installed_path = get_platform()->get_bin_dir() + m_toolchain_version; 
+       std::string installed_path = get_target_dir() + m_target_name; 
        std::cout << "installed path = " << installed_path <<'\n';
        if (dir_exists(installed_path)){
     	   std::cout << "dir_exists(installed_path)\n";
@@ -130,14 +109,36 @@ namespace {
        return dir_exists(installed_path) || move_dir();
    }
 
-   bool dep_arm_none_eabi::uninstall()
+   bool simple_dependency_t::uninstall()
    {
       return false;
    }
 
-} // namespace 
+//namespace {
+//   dependency_t* make_simple_dependency(
+//          int id,
+//          std::string const & src_dir_url  // '/' at end
+//         ,std::string const & src_filename
+//         ,std::string const & staged_name
+//         ,std::string const & target_name
+//         ,uint32_t flags
+//   )
+//   {
+//      return new simple_dependency_t{id,src_dir_url,src_filename,staged_name,target_name,flags};
+//   }
+//   }
 
-dependency_t* make_dependency_arm_non_eabi_gcc()
+
+dependency_t*  make_dependency_mavlink()
 {
-   return new dep_arm_none_eabi;
+    return new simple_dependency_t{
+         dependency_t::MAVLINK
+        , get_zoomworks_deps_dir()
+         ,"mavlink.zip"
+         ,"c_library-master"
+         ,"mavlink"
+         , simple_dependency_t::compressed_type_zip
+         | simple_dependency_t::uncompressed_type_dir
+         | simple_dependency_t::target_dir_lib
+    };
 }

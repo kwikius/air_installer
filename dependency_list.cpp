@@ -1,13 +1,17 @@
 #include "dependency_list.hpp"
 #include "make_dependency.hpp"
 #include <stdexcept>
+#include <cassert>
 
 dependency_t* make_dependency( int id)
 {
    switch ( id ){
      case dependency_t::ARM_NONE_EABI_GCC:
          return make_dependency_arm_non_eabi_gcc();
+     case dependency_t::MAVLINK:
+         return make_dependency_mavlink();
      default:
+         assert(false);
          return nullptr;
    }
 }

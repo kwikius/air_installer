@@ -105,8 +105,8 @@ int main(int argc , const char* argv[])
 
         // (void) platform;
 
-         deps.add(dependency_t::ARM_NONE_EABI_GCC);
-         
+        // deps.add(dependency_t::ARM_NONE_EABI_GCC);
+           deps.add(dependency_t::MAVLINK);
          deps.install();
 
          cleanup();
