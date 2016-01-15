@@ -59,14 +59,14 @@ struct simple_dependency_t : dependency_t{
       //TODO  add check on flags
    }
 
-   bool install();
-   bool uninstall();
-   bool move_dir();
-   bool stage_dir();
-   bool retrieve_file();
+   virtual bool install();
+   virtual bool uninstall();
+   virtual bool move_dir();
+   virtual bool stage_dir();
+   virtual bool retrieve_file();
 
    std::string get_target_dir();
-private:
+protected:
    std::string  m_src_dir_url; // the src dir url - without the file name. ( So we can separate the filename easily)
    std::string const m_src_filename; // the name of the compressed file  without the directory/url info
    std::string const m_unzip_rename; // rename the unzipped file to prevent collisions

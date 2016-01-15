@@ -193,3 +193,28 @@ dependency_t* make_dependency_quantracker()
          | simple_dependency_t::target_dir_lib
     };
 }
+
+#if 0
+dependency_t* make_dependency_arm_none_eabi_gcc()
+{
+    return new simple_dependency_t{
+         dependency_t::ARM_NONE_EABI_GCC
+         ,get_zoomworks_platform_deps_dir()
+          #if defined(AIR_INSTALLER_PLATFORM_UNIX)
+          ,"gcc-arm-none-eabi-5_2-2015q4-20151219-linux.tar.bz2"
+          ,"gcc-arm-none-eabi-5_2-2015q4-20151219-linux.tar.bz2"
+          #elif defined(AIR_INSTALLER_PLATFORM_WINDOWS)
+          ,"gcc-arm-none-eabi-5_2-2015q4-20151219-win32.zip"
+          ,"gcc-arm-none-eabi-5_2-2015q4-20151219-win32.zip"
+          #endif
+         ,"gcc-arm-none-eabi-5_2-2015q4"
+         ,"gcc-arm-none-eabi-5_2-2015q4"
+         , simple_dependency_t::compressed_type_bz2
+         | simple_dependency_t::uncompressed_type_dir
+         | simple_dependency_t::target_dir_lib
+    };
+}
+#endif
+
+
+

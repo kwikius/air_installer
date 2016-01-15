@@ -2,13 +2,89 @@
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
+#include <cassert>
 
 #include "config.hpp"
-#include "dependency.hpp"
+#include "simple_dependency.hpp"
 #include "stage.hpp"
 #include "platform.hpp"
 #include "file_utils.hpp"
 
+#if defined(AIR_INSTALLER_PLATFORM_WINDOWS)
+/*
+for windows we need to create a subdir of the temp dir
+ and unzip into that to make same functionality as the bzip2 Linux version
+  so we derive from the simple_depenency and override just the stage_dir function
+*/
+struct dep_arm_none_eabi : simple_dependency_t{
+
+   dep_arm_none_eabi()
+   :simple_dependency_t{
+         dependency_t::ARM_NONE_EABI_GCC
+         ,get_zoomworks_platform_deps_dir()
+         ,"gcc-arm-none-eabi-5_2-2015q4-20151219-win32.zip"
+         ,"gcc-arm-none-eabi-5_2-2015q4-20151219-win32.zip"
+         ,"gcc-arm-none-eabi-5_2-2015q4"
+         ,"gcc-arm-none-eabi-5_2-2015q4"
+         , simple_dependency_t::compressed_type_zip
+         | simple_dependency_t::uncompressed_type_dir
+         | simple_dependency_t::target_dir_lib
+   }{}
+
+   bool stage_dir()
+   {
+       // dir is not staged but may have been retrieved
+      std::string retrieved_url = get_platform()->get_temp_dir() + m_unzip_rename;
+      std::cout << retrieved_url <<'\n';
+      if (!file_exists( retrieved_url) ) {
+         retrieve_file();
+      }
+
+      std::string old_wkg_dir = get_working_dir();
+      change_wkg_dir_to(get_platform()->get_temp_dir());
+
+      // make the subdir to unzip into
+      std::string subdir_cmd = "mkdir " + m_unzip_rename;
+	   system (subdir_cmd.c_str());
+      assert( m_flags & compressed_type_zip);
+      std::string cmd = "unzip -d " + m_unzip_rename + " " + m_src_filename;
+      if ( system(cmd.c_str()) == -1){
+         change_wkg_dir_to(old_wkg_dir);
+         throw std::runtime_error("decompress failed\n");
+      }  else{
+         change_wkg_dir_to(old_wkg_dir);
+         std::cout << "decompress successful\n";
+         return true;
+      }
+   }
+
+   dependency_t* make_dependency_arm_none_eabi_gcc()
+   {
+      return new dep_arm_none_eabi;
+   }
+#else
+#if (! defined(AIR_INSTALLER_PLATFORM_UNIX))
+#error "logic error"
+#endif
+// For Linux simple_dependency_t works ok
+   dependency_t* make_dependency_arm_none_eabi_gcc()
+{
+    return new simple_dependency_t{
+         dependency_t::ARM_NONE_EABI_GCC
+         ,get_zoomworks_platform_deps_dir()
+          ,"gcc-arm-none-eabi-5_2-2015q4-20151219-linux.tar.bz2"
+          ,"gcc-arm-none-eabi-5_2-2015q4-20151219-linux.tar.bz2"
+         ,"gcc-arm-none-eabi-5_2-2015q4"
+         ,"gcc-arm-none-eabi-5_2-2015q4"
+         , simple_dependency_t::compressed_type_bz2
+         | simple_dependency_t::uncompressed_type_dir
+         | simple_dependency_t::target_dir_lib
+    };
+}
+
+#endif
+ 
+#if 0
 namespace {
    struct dep_arm_none_eabi : dependency_t{
        dep_arm_none_eabi(): dependency_t{ARM_NONE_EABI_GCC}
@@ -76,8 +152,8 @@ namespace {
       #if defined(AIR_INSTALLER_PLATFORM_WINDOWS)
       // the windows zip doesnt have the top level dir
       // so we have to make the subdir to unzip it into
-	  std::string subdir_cmd = "mkdir " + m_toolchain_version;
-	  system (subdir_cmd.c_str());
+	   std::string subdir_cmd = "mkdir " + m_toolchain_version;
+	   system (subdir_cmd.c_str());
       #endif
       std::string cmd = 
       #if defined(AIR_INSTALLER_PLATFORM_UNIX)
@@ -137,7 +213,8 @@ namespace {
 
 } // namespace 
 
-dependency_t* make_dependency_arm_non_eabi_gcc()
-{
-   return new dep_arm_none_eabi;
-}
+#endif
+//dependency_t* make_dependency_arm_none_eabi_gcc()
+//{
+//   return new dep_arm_none_eabi;
+//}
