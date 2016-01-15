@@ -99,9 +99,13 @@ bool parse_args(int argc , const char* argv[])
 int main(int argc , const char* argv[])
 {
    try{
-     // platform_t* platform = get_platform();
+
       dependency_list_t deps;
+
       if ( parse_args(argc,argv)){
+
+         // setup any empty paths here
+         get_platform()->set_defaults();  
 
          deps.add(dependency_t::ARM_NONE_EABI_GCC);
          deps.add(dependency_t::MAVLINK);
@@ -109,6 +113,7 @@ int main(int argc , const char* argv[])
          deps.add(dependency_t::STM32_STDPERIPH_LIBS);
          deps.add(dependency_t::QUAN);
          deps.add(dependency_t::QUANTRACKER);
+
          deps.install();
 
          cleanup();
