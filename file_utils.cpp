@@ -72,15 +72,20 @@ void change_wkg_dir_to(std::string const & dir)
    }
 }
 
+std::string get_zoomworks_platform_deps_dir()
+{
+   return 
+#if defined(AIR_INSTALLER_PLATFORM_UNIX)
+   get_zoomworks_deps_dir() + "Linux/";
+#elif defined(AIR_INSTALLER_PLATFORM_WINDOWS)
+   get_zoomworks_deps_dir() + "Windows/";
+#else
+  #error "need def for this platform"
+#endif
+}
+
 std::string get_zoomworks_deps_dir() 
 {
   return "http://www.zoomworks.org/Downloads/quantracker_dependencies/";
 }
-std::string get_zoomworks_linux_deps_dir()
-{
-   return get_zoomworks_deps_dir() + "Linux/";
-}
-std::string get_zoomworks_windows_deps_dir()
-{
-   return get_zoomworks_deps_dir() + "Windows/";
-}
+

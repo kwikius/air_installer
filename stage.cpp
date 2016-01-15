@@ -14,7 +14,13 @@
 #endif
 
    stage_t::stage_t() : m_remove_dir_on_exit{true}
+   {}
+
+   bool stage_t::set_default_dir()
    {
+     if ( m_temp_dir_name != ""){
+         return true;
+     }
    // create a tempdir for staging
    #if defined(AIR_INSTALLER_PLATFORM_UNIX)
       errno = 0;
@@ -25,6 +31,7 @@
       }
       
       m_temp_dir_name = std::string{temp_dir_name_cstr} + '/';
+      
    #elif defined (AIR_INSTALLER_PLATFORM_WINDOWS)
       // for windows get the offical temp directory
       char dir_name_cstr [MAX_PATH];
@@ -53,6 +60,7 @@
 		 std::cout << "temp dir name = " << m_temp_dir_name;
 	  }
    #endif  // (AIR_INSTALLER_PLATFORM_WINDOWS)
+     return true;
    }
 
    bool stage_t::set_dir( std::string const & dir)
@@ -76,7 +84,6 @@
          std::cout << "dir not found\n";
          return false;
        }
-     
    }
 
    stage_t::~stage_t()

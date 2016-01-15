@@ -18,13 +18,15 @@ struct platform_t{
    std::string const & get_bin_dir() const ;
    std::string const & get_temp_dir() const;
    static std::string get_dir_sep();
-private:
    void set_defaults();
+private:
+   
    std::string m_os;    
    std::string m_processor;
    std::string m_lib_dir;
    std::string m_bin_dir;
    stage_t     m_stage;
+  
 };
 
 platform_t* get_platform();

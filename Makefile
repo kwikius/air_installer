@@ -31,7 +31,7 @@ endif
 TARGET = airtool.exe
 
 local_objects = main.o dependency.o platform.o stage.o dependency_arm_none_eabi_gcc.o \
-file_utils.o config.o dependency_list.o
+file_utils.o config.o dependency_list.o simple_dependency.o
 
 objects = $(patsubst %, obj/%, $(local_objects))
 

@@ -1,13 +1,25 @@
 #include "dependency_list.hpp"
 #include "make_dependency.hpp"
 #include <stdexcept>
+#include <cassert>
 
 dependency_t* make_dependency( int id)
 {
    switch ( id ){
      case dependency_t::ARM_NONE_EABI_GCC:
-         return make_dependency_arm_non_eabi_gcc();
+         return make_dependency_arm_none_eabi_gcc();
+     case dependency_t::MAVLINK:
+         return make_dependency_mavlink();
+     case dependency_t::FREERTOS:
+         return make_dependency_freertos();
+     case dependency_t::STM32_STDPERIPH_LIBS:
+         return make_dependency_stm32_stdperiph_libs();
+     case dependency_t::QUAN:
+         return make_dependency_quan();
+     case dependency_t::QUANTRACKER:
+         return make_dependency_quantracker();
      default:
+         assert(false);
          return nullptr;
    }
 }

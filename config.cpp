@@ -1,10 +1,7 @@
 #include "config.hpp"
 
-
 namespace {
-
    bool flags_verbose = true;
-
 }
 
 void set_verbose(bool b) 
