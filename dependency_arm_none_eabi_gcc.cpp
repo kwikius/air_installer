@@ -60,6 +60,7 @@ struct dep_arm_none_eabi : simple_dependency_t{
          return true;
       }
    }
+};
 
    dependency_t* make_dependency_arm_none_eabi_gcc()
    {
