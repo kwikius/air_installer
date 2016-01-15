@@ -12,6 +12,7 @@ struct dependency_t{
       ,STM32FLASH
       ,MAVLINK
       ,QUAN
+      ,QUANTRACKER
    };
    
    dependency_t(int id);

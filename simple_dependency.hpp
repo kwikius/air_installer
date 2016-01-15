@@ -19,9 +19,9 @@ download_src{
 platform linux
 
   src_url  ->        platform_target_dir. target
-  zoomworks.linux.arm-non-eabi-gcc-bz2  ->   platform.bin-dir.arm-none-eabi-gcc-version
+  #zoomworks.linux.arm-non-eabi-gcc-bz2  ->   platform.bin-dir.arm-none-eabi-gcc-version
   zoomworks.FreeRTOS-zip                ->   platform.lib-dir.FreeRTOS-version
-  zoomworks.mavlink-zip                 ->   platform.lib-dir.mavlink
+  #zoomworks.mavlink-zip                 ->   platform.lib-dir.mavlink
   zoomworks.stm32-stdperiph-zip         ->   platform.lib-dir.stdperiph-version
 
   github.kwikius.quan_trunk_master.quan_trunk -> platform.lib-dir.quan_trunk
@@ -40,6 +40,7 @@ struct simple_dependency_t : dependency_t{
        int id,
        std::string const & src_dir_url  // '/' at end
       ,std::string const & src_filename
+      ,std::string const & unzip_rename
       ,std::string const & staged_name
       ,std::string const & target_name
       ,uint32_t flags
@@ -47,6 +48,7 @@ struct simple_dependency_t : dependency_t{
    :dependency_t{id}
    ,m_src_dir_url{src_dir_url}
    ,m_src_filename{src_filename}
+   ,m_unzip_rename{unzip_rename}
    ,m_staged_name{staged_name}
    ,m_target_name{target_name}
    ,m_flags{flags}
@@ -67,14 +69,10 @@ struct simple_dependency_t : dependency_t{
 private:
    std::string  m_src_dir_url; // the src dir url - without the file name. ( So we can separate the filename easily)
    std::string const m_src_filename; // the name of the compressed file  without the directory/url info
-   
+   std::string const m_unzip_rename; // rename the unzipped file to prevent collisions
    std::string const m_staged_name; // The uncompressed top-level file/dir name  
    std::string const m_target_name; //  The name of the target - dir
-
-   
-   
    uint32_t const m_flags;
-
 };
 
 #endif // AIR_INSTALLER_SIMPLE_DEPENDENCY_HPP_INCLUDED
