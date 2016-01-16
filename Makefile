@@ -1,4 +1,7 @@
 
+
+AIR_MINGW_PATH = /c/MinGW
+
 ifeq ($(OS),Windows_NT)
 AIR_TARGET_OS := Windows
 else
@@ -22,7 +25,7 @@ CC      = $(AIR_MINGW_PATH)/bin/g++
 CC1     = $(AIR_MINGW_PATH)/bin/gcc
 LD      = $(AIR_MINGW_PATH)/bin/g++
 CFLAGS = -std=c++11
-LFLAGS = 
+LFLAGS =
 else
 $(error "No OS defined")
 endif
