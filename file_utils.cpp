@@ -1,6 +1,7 @@
 #include "file_utils.hpp"
 #include "config.hpp"
 #include <stdexcept>
+#include <iostream>
 
 #if defined(AIR_INSTALLER_PLATFORM_UNIX)
 #include <sys/types.h>
@@ -74,7 +75,7 @@ void change_wkg_dir_to(std::string const & dir)
 
 std::string get_zoomworks_platform_deps_dir()
 {
-   return 
+   return
 #if defined(AIR_INSTALLER_PLATFORM_UNIX)
    get_zoomworks_deps_dir() + "Linux/";
 #elif defined(AIR_INSTALLER_PLATFORM_WINDOWS)
@@ -84,7 +85,7 @@ std::string get_zoomworks_platform_deps_dir()
 #endif
 }
 
-std::string get_zoomworks_deps_dir() 
+std::string get_zoomworks_deps_dir()
 {
   return "http://www.zoomworks.org/Downloads/quantracker_dependencies/";
 }
