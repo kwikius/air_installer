@@ -1,1 +1,26 @@
-Installer for the quntracker APM toolchain
+Installer for the quantracker APM toolchain
+
+Designed to enable the toolchain to be installed easily on various operating systems.
+
+Currently supported by Linux and Windows2000
+
+Dependencies.
+
+For Windows, it is suggested to download and install MINGW and MSYS.
+  You will need the g++ and binutils packages
+  in a MSYS shell type migw-get
+  Select the bin class for:
+    mingw32-base
+    mingw32-binutils
+    mingw32-g++
+    mingw32-libgcc
+    mingw32-libstdc++
+    mingw32-api
+
+For Linux
+  Most linux distros should already have most of the dependencies.
+
+  Download the sources and invoke make in the source directory.
+  On success, the
+
+
