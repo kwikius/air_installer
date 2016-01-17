@@ -88,15 +88,20 @@
 
    stage_t::~stage_t()
    {
-      if ( m_remove_dir_on_exit){
-         std::string cmd = "rmdir " + m_temp_dir_name;
-         int result = system (cmd.c_str());
-         if ( result != -1){
-            if ( get_verbose()){
-               std::cout << "Deleted stage dir \"" << m_temp_dir_name << "\"\n";
-            }
-         }
-    	  //Will prob need to delete the files in there
-         
+      // this only happens in case the stage dir was not specified at cmd line
+      if ( m_remove_dir_on_exit &&  
+            (get_platform()->get_temp_dir() != "") && 
+               ( dir_exists(get_platform()->get_temp_dir()) ) ){
+            std::string old_wkg_dir = get_working_dir();
+            change_wkg_dir_to(get_platform()->get_temp_dir());
+            int result = system ("rm -f *.zip *.bz2");
+            // for testing
+//            std::cout << "Pres key for del\n";
+//            char ch;
+//            std::cin.get(ch);
+            change_wkg_dir_to(old_wkg_dir);
+            std::string cmd = "rmdir  " + get_platform()->get_temp_dir();
+            system (cmd.c_str());
+
       }
    }
