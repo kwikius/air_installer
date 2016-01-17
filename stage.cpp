@@ -29,9 +29,9 @@
       if ( ! dir_name  || ( errno != 0) ){
          throw std::runtime_error("failed to create temp dir");
       }
-      
+
       m_temp_dir_name = std::string{temp_dir_name_cstr} + '/';
-      
+
    #elif defined (AIR_INSTALLER_PLATFORM_WINDOWS)
       // for windows get the offical temp directory
       char dir_name_cstr [MAX_PATH];
@@ -57,7 +57,7 @@
 	  if ( m_temp_dir_name == ""){
 		 throw std::runtime_error("failed to create temp dir");
 	  } else{
-		 std::cout << "temp dir name = " << m_temp_dir_name;
+		// std::cout << "temp dir name = " << m_temp_dir_name;
 	  }
    #endif  // (AIR_INSTALLER_PLATFORM_WINDOWS)
      return true;
@@ -66,9 +66,10 @@
    bool stage_t::set_dir( std::string const & dir)
    {
        if ( dir_exists(dir)){
-            if ((m_remove_dir_on_exit == true) &&  (m_temp_dir_name != dir)){
+            if ( (m_temp_dir_name != "") && (m_remove_dir_on_exit == true) && (m_temp_dir_name != dir)){
                 std::string cmd = "rmdir " + m_temp_dir_name;
-                int result = system (cmd.c_str());
+               // std::cout  <<" cmd is " << cmd << '\n';
+                int result =  system (cmd.c_str());
                 if (result == -1){
                   std::cout << "warning couldnt remove old temp dir\n";
                 }
@@ -79,6 +80,7 @@
             }else{
               m_temp_dir_name = dir;
             }
+
             return true;
        }else{
          std::cout << "dir not found\n";

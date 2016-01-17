@@ -30,15 +30,15 @@ struct dep_arm_none_eabi : simple_dependency_t{
          ,"gcc-arm-none-eabi-5_2-2015q4"
          , simple_dependency_t::compressed_type_zip
          | simple_dependency_t::uncompressed_type_dir
-         | simple_dependency_t::target_dir_lib
+         | simple_dependency_t::target_dir_bin
    }{}
 
-   
+
    bool stage_dir() override
    {
        // dir is not staged but may have been retrieved
       std::string retrieved_url = get_platform()->get_temp_dir() + m_unzip_rename;
-      std::cout << retrieved_url <<'\n';
+    //  std::cout << retrieved_url <<'\n';
       if (!file_exists( retrieved_url) ) {
          retrieve_file();
       }
@@ -47,10 +47,10 @@ struct dep_arm_none_eabi : simple_dependency_t{
       change_wkg_dir_to(get_platform()->get_temp_dir());
 
       // make the subdir to unzip into
-      std::string subdir_cmd = "mkdir " + m_unzip_rename;
-	   system (subdir_cmd.c_str());
+      std::string subdir_cmd = "mkdir " + m_staged_name;
+      system (subdir_cmd.c_str());
       assert( m_flags & compressed_type_zip);
-      std::string cmd = "unzip -d " + m_unzip_rename + " " + m_src_filename;
+      std::string cmd = "unzip -d " + m_staged_name + " " + m_unzip_rename;
       if ( system(cmd.c_str()) == -1){
          change_wkg_dir_to(old_wkg_dir);
          throw std::runtime_error("decompress failed\n");
@@ -60,6 +60,7 @@ struct dep_arm_none_eabi : simple_dependency_t{
          return true;
       }
    }
+};
 
    dependency_t* make_dependency_arm_none_eabi_gcc()
    {
@@ -81,7 +82,7 @@ struct dep_arm_none_eabi : simple_dependency_t{
          ,"gcc-arm-none-eabi-5_2-2015q4"
          , simple_dependency_t::compressed_type_bz2
          | simple_dependency_t::uncompressed_type_dir
-         | simple_dependency_t::target_dir_lib
+         | simple_dependency_t::target_dir_bin
     };
 }
 

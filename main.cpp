@@ -10,7 +10,7 @@
 
 /*
    msys utilities to test for
-   
+
    msys-wget
    #mysy-tar ( not used on windows )
    #msys-bzip2 (not used on windows)
@@ -21,7 +21,7 @@
 #include <iostream>
 
 namespace {
-  
+
    void cleanup()
    {
       cleanup_platform();
@@ -62,7 +62,7 @@ bool parse_args(int argc , const char* argv[])
 	  case LIB_DIR:
          if ( argc > (argnum + 1) ){
             std::string target_dir = argv[argnum + 1];
-            std::cout << "target dir = " << target_dir  <<'\n';
+          //  std::cout << "target dir = " << target_dir  <<'\n';
             bool result = false;
             switch (argid){
             case STAGE_DIR:
@@ -105,7 +105,7 @@ int main(int argc , const char* argv[])
       if ( parse_args(argc,argv)){
 
          // setup any empty paths here
-         get_platform()->set_defaults();  
+         get_platform()->set_defaults();
 
          deps.add(dependency_t::ARM_NONE_EABI_GCC);
          deps.add(dependency_t::MAVLINK);
