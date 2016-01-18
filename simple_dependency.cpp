@@ -35,7 +35,7 @@ bool simple_dependency_t::retrieve_file()
    #endif
    std::cout << "<--<--<-- (retrieving " << m_target_name << " ... ) <--<--<--\n";
    std::string cmd = "wget " + download_flags + " --directory-prefix=" + get_platform()->get_temp_dir()
-      + " " + m_src_dir_url + m_src_filename + " --output-document=" + m_src_filename;
+      + " " + m_src_dir_url + m_src_filename + " --output-document=" + m_unzip_rename;
 
    int result = system(cmd.c_str());
    
@@ -49,10 +49,7 @@ bool simple_dependency_t::retrieve_file()
       change_wkg_dir_to(old_wkg_dir);
       throw std::runtime_error("wget failed");
    }
-   if ( m_unzip_rename != m_src_filename){
-      cmd = "mv " +  m_src_filename + " " + m_unzip_rename;
-      system(cmd.c_str());
-   }
+
    std::cout << "-->-->-->-->-->-->\n";
    std::cout << "   OK;   // (retrieve successful)\n";
    change_wkg_dir_to(old_wkg_dir);
