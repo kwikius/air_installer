@@ -27,9 +27,6 @@
    // todo to dif between e.g pc and raspberry pi
    m_processor{""}
    {
-    if ( get_verbose()){
-         std::cout << "Air Installer on " << m_os << "\n\n";
-    }
    }
    std::string const & platform_t::get_OS() const { return m_os;}
    std::string const & platform_t::get_processor() const {return m_processor;}

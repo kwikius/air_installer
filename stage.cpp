@@ -100,7 +100,7 @@
                ( dir_exists(get_platform()->get_temp_dir()) ) ){
             std::string old_wkg_dir = get_working_dir();
             change_wkg_dir_to(get_platform()->get_temp_dir());
-            int result = system ("rm -f *.zip *.bz2");
+            system ("rm -f *.zip *.bz2");
             // for testing
 //            std::cout << "Pres key for del\n";
 //            char ch;
