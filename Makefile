@@ -1,35 +1,27 @@
 
 
-AIR_MINGW_PATH = /c/MinGW
+UNAME := $(shell uname -s)
 
-ifeq ($(OS),Windows_NT)
-AIR_TARGET_OS := Windows
+ifneq ($(findstring Linux, $(UNAME)),)
+OS_SHELL = Linux
+CXX = g++
 else
-AIR_TARGET_OS := $(shell uname -s)
-endif
-
-ifeq ($(AIR_TARGET_OS),Linux)
-CC      = g++
-CC1     = gcc
-LD      = g++
-CFLAGS = -std=c++11
-LFLAGS = -static
+ifneq ($(findstring CYGWIN, $(UNAME)),)
+OS_SHELL = Cygwin
+LDFLAGS = -static
 else
-ifeq ($(AIR_TARGET_OS),Windows)
-
-ifeq ($(AIR_MINGW_PATH), )
-$(error "Need to invoke make with path to MINGW like make AIR_MINGW_PATH=/c/MinGW")
-endif
-
-CC      = $(AIR_MINGW_PATH)/bin/g++
-CC1     = $(AIR_MINGW_PATH)/bin/gcc
-LD      = $(AIR_MINGW_PATH)/bin/g++
-CFLAGS = -std=c++11
-LFLAGS =
+ifneq ($(findstring MINGW,$(UNAME)),)
+OS_SHELL = MinGW
+LDFLAGS = -static
 else
-$(error "No OS defined")
+$(error "Cant deduce OS Shell that make is running from.")
 endif
 endif
+endif
+
+CXX = g++
+LD = $(CXX)
+CXXFLAGS = -std=c++11
 
 TARGET = airtool.exe
 
@@ -47,7 +39,7 @@ obj:
 	mkdir -p obj
 
 $(objects) : obj/%.o : %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 bin/$(TARGET) : $(objects)
 	$(LD) $(LDFLAGS) -o $@ $(objects)
