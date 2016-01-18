@@ -2,25 +2,52 @@ Installer for the quantracker APM toolchain
 
 Designed to enable the toolchain to be installed easily on various operating systems.
 
-Currently supported by Linux and Windows2000
+Currently supported by Linux and Windows
 
 Dependencies.
 
-For Windows, it is suggested to download and install MINGW and MSYS.
-  You will need the g++ and binutils packages
-  in a MSYS shell type migw-get
-  Select the bin class for:
-    mingw32-base
-    mingw32-binutils
-    mingw32-g++
-    mingw32-libgcc
-    mingw32-libstdc++
-    mingw32-api
+For Windows, a GNU-Linux like Build Environment is required.
+You can choose from either Cygwin, MinGW or MinGW-w64.
 
-For Linux
-  Most linux distros should already have most of the dependencies.
+For each of these packages , it should be checked that
+the following cmd line apps are installed
+    make
+    wget
+    unzip
+    tar
 
-  Download the sources and invoke make in the source directory.
-  On success, the
+For Native Linux
+  Most linux distros should already have all these basic apps installed
+  pre-installed as part of the operating system.
+
+Building
+  Though it would be possible to provide a binary for Windows, building the installer
+  is a useful test of the toolchain.
+  Download and unzip the Github zip to a directory and invoke make in that directory.
+
+  After a successful build, the executable airtool.exe will be in the bin/ subdirectory
+
+Running.
+   On linux enter the air_installer/bin directory and invoke ./airtool.exe
+   If you wish to control the directries, you can use command line argumments (TO document)
+
+   On Windows, it is simpler to run the installer from within its shell:
+
+   In MINGW/MSYS:
+
+   <$ cd /c/path_to_air_installer/bin
+   <$  ./airtool.exe optional_args]
+
+   In Cygwin
+
+   <$ cd /cygdrive/path_to_installer/bin
+   <$  ./airtool.exe optional_args]
+
+   It is possible to run it fom a Windows Terminal, but the path to the Linux binutils must be set.
+   For Cygwin, the Cygwin dll cygwin1.dll must be available. This can be achieved by adding the
+   Cygwin/bin/ directory to your path
+
+
+
 
 
