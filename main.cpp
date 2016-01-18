@@ -1,4 +1,4 @@
-
+#include <cstdlib>
 #include <cstring>
 #include "config.hpp"
 #include "platform.hpp"
@@ -9,13 +9,7 @@
 #endif
 
 /*
-   msys utilities to test for
-
-   msys-wget
-   #mysy-tar ( not used on windows )
-   #msys-bzip2 (not used on windows)
-   msys-unzip
-   unzip
+  TODO platform dependent, check that apps that are needed are installed
 */
 
 #include <iostream>
