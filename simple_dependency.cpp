@@ -26,6 +26,7 @@ bool simple_dependency_t::retrieve_file()
    std::string old_wkg_dir = get_working_dir();
    change_wkg_dir_to(get_platform()->get_temp_dir());
 
+   // make conditional on using an anonymous temp dir?
    std::string download_flags = "--no-clobber ";
    #if defined(AIR_INSTALLER_PLATFORM_WINDOWS)
    if (m_src_dir_url.find("https:",0,6) != std::string::npos ){
