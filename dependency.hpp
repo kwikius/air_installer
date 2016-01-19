@@ -19,9 +19,10 @@ struct dependency_t{
    virtual ~ dependency_t(){}
    virtual bool install() = 0;
    virtual bool uninstall() = 0;
-   virtual bool move_dir() = 0;
-   virtual bool stage_dir() = 0;
-   virtual bool retrieve_file() = 0;
+   virtual ~ dependency_t(){}
+
+   int get_id() const { return m_id;}
+
    private:
       int m_id;
 };
