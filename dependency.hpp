@@ -16,7 +16,6 @@ struct dependency_t{
    };
    
    dependency_t(int id);
-   virtual ~ dependency_t(){}
    virtual bool install() = 0;
    virtual bool uninstall() = 0;
    virtual ~ dependency_t(){}
