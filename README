@@ -7,7 +7,7 @@ Currently supported by Linux and Windows
 Dependencies.
 
 For Windows, a GNU-Linux like Build Environment is required.
-You can choose from either Cygwin, MinGW or MinGW-w64.
+The app currently only builds on Cygwin
 
 For each of these packages , it should be checked that
 the following cmd line apps are installed
