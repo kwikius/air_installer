@@ -86,7 +86,7 @@ bool parse_args(int argc , const char* argv[])
          return false;
       }
 	  default:
-		  std::cerr << "unknown arg\n";
+		  std::cerr << "Error: invalid command line arg '" <<  argv[argnum] <<  "'\n";
 		  return false;
 	  }
    }
