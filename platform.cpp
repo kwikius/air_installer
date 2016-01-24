@@ -1,5 +1,6 @@
 #include "config.hpp"
 #include "platform.hpp"
+#include "file_utils.hpp"
 #include "stage.hpp"
 #include <cstdlib>
 #include <stdexcept>
@@ -75,6 +76,7 @@
         const char* str_home = getenv("HOME");
    #elif defined (AIR_INSTALLER_PLATFORM_WINDOWS)
         const char*  str_home = getenv("USERPROFILE");
+        // TODO check these are valid
    #else
    #error "shouldnt get here"
    #endif
