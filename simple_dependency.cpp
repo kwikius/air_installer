@@ -37,10 +37,51 @@ bool simple_dependency_t::retrieve_file()
    std::string cmd = "wget " + download_flags + " --directory-prefix=" + get_platform()->get_temp_dir()
       + " " + m_src_dir_url + m_src_filename + " --output-document=" + m_unzip_rename;
 
-   int result = system(cmd.c_str());
-   
-   if ( result == -1){
+   // see wgte man
+   // 0 --> success
+   // 1 generic error
+   // 2 error parsing args
+   // 3 file i/o error
+   //
+   int ret = system(cmd.c_str());
+   int result = WEXITSTATUS(ret);
+   if (result != 0){
+      std::string str = "\nError  : " ;
+      switch (result){
+         case 0:
+         
+            break;
+         case 1:
+            str +=  "generic";
+            break;
+         case 2:
+            str+= "parsing args";
+            break;
+         case 3:
+            str +=  "file I/O failed";
+            break;
+         case 4:
+            str += "network failure";
+            break;
+         case 5:
+            str += "SSL verification failed";
+            break;
+         case 6:
+            str += "username/password failure";
+            break;
+         case 7:
+            str += "protocol failed";           
+            break;
+         case 8:
+            str+= "server issued error response";
+            break;
+         default:
+            str += "undiagnosed";
+            break;
+       }
       // clean up . Possibly partially downloaded file
+      str += " downloading " + m_src_dir_url + m_src_filename;
+      std::cerr << str << "\n\n";
       std::string stage_src_file = get_platform()->get_temp_dir() + m_src_filename;
       if (file_exists(stage_src_file)){
          cmd = "rm " + stage_src_file;
@@ -49,7 +90,6 @@ bool simple_dependency_t::retrieve_file()
       change_wkg_dir_to(old_wkg_dir);
       throw std::runtime_error("wget failed");
    }
-
    std::cout << "-->-->-->-->-->-->\n";
    std::cout << "   OK;   // (retrieve successful)\n";
    change_wkg_dir_to(old_wkg_dir);
@@ -63,7 +103,9 @@ bool simple_dependency_t::stage_dir()
    // dir is not staged but may have been retrieved
    std::string retrieved_url = get_platform()->get_temp_dir() + m_unzip_rename;
    if (!file_exists( retrieved_url) ) {
-      retrieve_file();
+      if (!retrieve_file()){
+         return false;
+      }
    }
    // stage here ( uncompress/extract the dir from compressed file)
    std::string old_wkg_dir = get_working_dir();
