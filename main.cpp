@@ -3,6 +3,7 @@
 #include "config.hpp"
 #include "platform.hpp"
 #include "dependency_list.hpp"
+#include "file_utils.hpp"
 
 #if defined (AIR_INSTALLER_PLATFORM_WINDOWS)
 #include "Windows.h"
@@ -48,40 +49,44 @@ namespace {
 bool parse_args(int argc , const char* argv[])
 {
    int argnum = 1; // ignore progname
+   
    while (argnum < argc) {
-      int argid = arg_to_id(argv[argnum]);
+     int argid = arg_to_id(argv[argnum]);
+     bool result = false;
 	  switch(argid){
 	  case STAGE_DIR:
 	  case BIN_DIR:
 	  case LIB_DIR:
-         if ( argc > (argnum + 1) ){
-            std::string target_dir = argv[argnum + 1];
-          //  std::cout << "target dir = " << target_dir  <<'\n';
-            bool result = false;
-            switch (argid){
-            case STAGE_DIR:
-            	result = get_platform()->set_temp_dir(target_dir);
-            	break;
-      	    case BIN_DIR:
-      	    	result = get_platform()->set_bin_dir(target_dir);
-      	    	break;
-      	    case LIB_DIR:
-      	    	result = get_platform()->set_lib_dir(target_dir);
-      	    	break;
-            }
-            if ( result ){
-               argnum += 2;
-               break;
-            }else{
-               return false; // has reported
-            }
-         }else{
-            std::cout << "expected temp dir name\n";
-            return false;
+      if ( argc > (argnum + 1) ){
+         std::string target_dir = argv[argnum + 1];
+         if (!dir_exists(target_dir)){
+           std::cerr << "dir doesnt exist \"" << target_dir << "\"\n";
+           return false;
          }
-
+         bool result = false;
+         switch (argid){
+         case STAGE_DIR:
+            result = get_platform()->set_temp_dir(target_dir);
+            break;
+          case BIN_DIR:
+            result = get_platform()->set_bin_dir(target_dir);
+            break;
+          case LIB_DIR:
+            result = get_platform()->set_lib_dir(target_dir);
+            break;
+         }
+         if ( result ){
+            argnum += 2;
+            break;
+         }else{
+            return false; // has reported
+         }
+      }else{
+         std::cerr << "expected temp dir name\n";
+         return false;
+      }
 	  default:
-		  std::cout << "unknown arg\n";
+		  std::cerr << "unknown arg\n";
 		  return false;
 	  }
    }
@@ -113,22 +118,22 @@ int main(int argc , const char* argv[])
          deps.add(dependency_t::QUAN);
          deps.add(dependency_t::QUANTRACKER);
 
-         deps.install();
+         if ( deps.install() ){
 
-
-         std::cout << "Install was successful...\n\n";
-         std::cout << "libraries are in " << get_platform()->get_lib_dir() <<'\n';
-         std::cout << "binaries  are in " << get_platform()->get_bin_dir() << "\n\n";
-         std::cout << "########################################################\n";
-         std::cout << "Quantracker APM air installer V1.0 on " <<  get_platform()->get_OS() << " completed successfully\n";
-         std::cout << "########################################################\n\n\n";
-         cleanup();
+            std::cout << "Install was successful...\n\n";
+            std::cout << "libraries are in " << get_platform()->get_lib_dir() <<'\n';
+            std::cout << "binaries  are in " << get_platform()->get_bin_dir() << "\n\n";
+            std::cout << "########################################################\n";
+            std::cout << "Quantracker APM air installer V1.0 on " <<  get_platform()->get_OS() << " completed successfully\n";
+            std::cout << "########################################################\n\n\n";
+            cleanup();
 
          return EXIT_SUCCESS;
+       }
       }else{
          return EXIT_FAILURE;
       }
    }catch (std::exception & e){
-      std::cout << "error " << e.what() << " quitting\n";
+      std::cerr << "ERROR : \"" << e.what() << "\"\n ...quitting\n\n";
    }
 }
