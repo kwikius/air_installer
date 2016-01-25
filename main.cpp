@@ -49,10 +49,10 @@ namespace {
 bool parse_args(int argc , const char* argv[])
 {
    int argnum = 1; // ignore progname
-   
+   bool result = false;
    while (argnum < argc) {
      int argid = arg_to_id(argv[argnum]);
-     bool result = false;
+     
 	  switch(argid){
 	  case STAGE_DIR:
 	  case BIN_DIR:
@@ -90,10 +90,12 @@ bool parse_args(int argc , const char* argv[])
 		  return false;
 	  }
    }
-   return true;
+   return result;
 }
 
 }// namespace
+
+bool do_unzip( std::string const & src_zip, std::string const & dest_dir);
 
 int main(int argc , const char* argv[])
 {
@@ -103,6 +105,11 @@ int main(int argc , const char* argv[])
       std::cout << "Quantracker APM air installer V1.0 on " <<  get_platform()->get_OS() << " starting\n";
       std::cout << "########################################################\n\n";
       // checking for required shell apps
+
+      do_unzip("/home/andy/cpp/ap_temp/FreeRTOSV8.2.3.zip", "/home/andy/cpp/ap_lib/");
+      return 0;
+
+//#####################################################
 
       dependency_list_t deps;
 
