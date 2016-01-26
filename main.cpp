@@ -49,7 +49,7 @@ namespace {
 bool parse_args(int argc , const char* argv[])
 {
    int argnum = 1; // ignore progname
-   bool result = false;
+   bool result = true;
    while (argnum < argc) {
      int argid = arg_to_id(argv[argnum]);
      
@@ -95,7 +95,7 @@ bool parse_args(int argc , const char* argv[])
 
 }// namespace
 
-bool do_unzip( std::string const & src_zip, std::string const & dest_dir);
+
 
 int main(int argc , const char* argv[])
 {
@@ -106,8 +106,9 @@ int main(int argc , const char* argv[])
       std::cout << "########################################################\n\n";
       // checking for required shell apps
 
-      do_unzip("/home/andy/cpp/ap_temp/FreeRTOSV8.2.3.zip", "/home/andy/cpp/ap_lib/");
-      return 0;
+     // do_unzip("/home/andy/cpp/ap_temp/FreeRTOSV8.2.3.zip", "/home/andy/cpp/ap_lib/");
+//      do_unzip("/home/andy/cpp/ap_temp/quantracker-master.zip", "");
+//      return 0;
 
 //#####################################################
 
@@ -115,8 +116,11 @@ int main(int argc , const char* argv[])
 
       if ( parse_args(argc,argv)){
 
+         std::cout << "args parsed\n";
+
          // setup any empty paths here
          get_platform()->set_defaults();
+         std::cout << "defaults set\n";
 
          deps.add(dependency_t::ARM_NONE_EABI_GCC);
          deps.add(dependency_t::MAVLINK);
