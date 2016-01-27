@@ -22,14 +22,15 @@ using quan::gx::wxwidgets::to_wxString;
 
 /*
    src_zip must exist
-   target_dir must exist
+   target_dir must exist or be empty string
 */
 bool do_unzip( 
       std::string const & src_zip, 
       std::string const & target_dir)
 {
    assert(file_exists(src_zip) );
-   assert(dir_exists(target_dir) );
+
+   assert( (target_dir == "") || dir_exists(target_dir) );
   
    wxString wx_src_zip = to_wxString(src_zip);
    wxString wx_target_dir = to_wxString(target_dir);
