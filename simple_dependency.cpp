@@ -114,20 +114,33 @@ bool simple_dependency_t::stage_dir()
    std::string cmd ;
    if ( m_flags & compressed_type_bz2){
       cmd = "tar xjf " + retrieved_url;
+
+      if ( system(cmd.c_str()) == -1){
+         change_wkg_dir_to(old_wkg_dir);
+         throw std::runtime_error("decompress failed\n");
+      }else{
+         std::cout << "-->-->-->-->-->-->\n";
+         std::cout << "   OK;   // (unzip successful)\n";
+         change_wkg_dir_to(old_wkg_dir);
+         return true;
+      }
+      
    }else{
       assert( m_flags & compressed_type_zip);
-      cmd = "unzip -q " + retrieved_url;
-   }
-
-   if ( system(cmd.c_str()) == -1){
+      bool result = do_unzip(retrieved_url);
       change_wkg_dir_to(old_wkg_dir);
-      throw std::runtime_error("decompress failed\n");
-   }  else{
-      std::cout << "-->-->-->-->-->-->\n";
-      std::cout << "   OK;   // (unzip successful)\n";
-      change_wkg_dir_to(old_wkg_dir);
-      return true;
+      return result;
    }
+//
+//   if ( system(cmd.c_str()) == -1){
+//      change_wkg_dir_to(old_wkg_dir);
+//      throw std::runtime_error("decompress failed\n");
+//   }  else{
+//      std::cout << "-->-->-->-->-->-->\n";
+//      std::cout << "   OK;   // (unzip successful)\n";
+//      change_wkg_dir_to(old_wkg_dir);
+//      return true;
+//   }
 }
 
 // on entry gcc dir not installed
