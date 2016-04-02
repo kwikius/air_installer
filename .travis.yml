@@ -10,4 +10,4 @@ addons:
     - g++-4.8
     - gcc-4.8
     
-script:  make clean && make CXX="g++-4.8"
+script:  make clean && make CXX="g++-4.8" && make execute

@@ -44,5 +44,8 @@ $(objects) : obj/%.o : %.cpp
 bin/$(TARGET) : $(objects)
 	$(LD) $(LDFLAGS) -o $@ $(objects)
 
+execute: bin/$(TARGET)
+	bin/$(TARGET)
+
 clean:
 	rm -rf obj/*.o bin/$(TARGET)
