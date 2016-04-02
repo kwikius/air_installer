@@ -5,6 +5,8 @@
 #include "dependency_list.hpp"
 #include "file_utils.hpp"
 
+//dummy
+
 #if defined (AIR_INSTALLER_PLATFORM_WINDOWS)
 #include "Windows.h"
 #endif
