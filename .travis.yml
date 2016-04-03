@@ -10,7 +10,7 @@ addons:
     - g++-4.8
     - gcc-4.8
 before_install:
-    - compiler = $HOME/ap_bin/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-g++
+    - compiler = $HOME/ap_bin/gcc-arm-none-eabi-5_2-2015q4
 
 install:
 # install the dependencies
