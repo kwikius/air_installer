@@ -12,12 +12,13 @@ addons:
 
 install:
    - mkdir air_installer_tmp && cd air_installer_tmp
-   - wget https://github.com/kwikius/air_installer.zip
-   - unzip air_installer.zip
+   - wget https://github.com/kwikius/air_installer/archive/install_test.zip
+   - unzip install_test.zip
+   - cd air_installer-install_test
    - make clean && make CXX="g++-4.8"
    - mkdir $HOME/ap_lib
    - mkdir $HOME/ap_bin
    - make execute
-   - cd ../
+   - cd ../../
    
 script:  ls $HOME/ap_lib && ls $HOME/ap_bin
