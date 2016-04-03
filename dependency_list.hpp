@@ -12,6 +12,7 @@ struct dependency_list_t {
    ~dependency_list_t();
    void add(int id);
    bool install();
+   bool make_dependencies_mk();
 private:
    // deps installed in order in list
    std::list<int> m_dep_id_list;

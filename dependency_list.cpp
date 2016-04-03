@@ -1,7 +1,10 @@
 #include "dependency_list.hpp"
 #include "make_dependency.hpp"
+#include "platform.hpp"
 #include <stdexcept>
 #include <cassert>
+#include <fstream>
+#include <iostream>
 
 dependency_t* make_dependency( int id)
 {
@@ -30,8 +33,28 @@ bool dependency_list_t::install()
     if ( !m_dependency_map[i]->install()){
       return false;
     }
-  }
-  return true;
+  } 
+  return make_dependencies_mk();
+}
+
+bool dependency_list_t::make_dependencies_mk()
+{
+   
+  std::string lib_dir = get_platform()->get_lib_dir();
+  std::string bin_dir = get_platform()->get_bin_dir();
+  std::string filename = lib_dir + "quantracker/Dependencies.mk";
+  std::cout << "Writing " << filename <<'\n';
+  std::ofstream out (filename.c_str());
+   if ( ! out  || out.fail()){
+      throw std::logic_error("file open failed\n");
+   }
+  out << "TOOLCHAIN_PREFIX = " << bin_dir << "gcc-arm-none-eabi-5_2-2015q4/\n";
+  out << "TOOLCHAIN_GCC_VERSION = 5.2.1\n";
+  out << "STM32FLASH = stm32flash\n";
+  out << "QUAN_INCLUDE_PATH = " << lib_dir << "quan-trunk\n";
+  out << "MAVLINK_INCLUDE_PATH = " << lib_dir << '\n';
+  out << "FREE_RTOS_DIR = " << lib_dir << "FreeRTOSV8.2.3/FreeRTOS/\n";
+  out << "STM32_STD_PERIPH_LIB_DIR = " << lib_dir << "STM32F4xx_DSP_StdPeriph_Lib_V1.6.1/Libraries/\n\n";
 }
 
 dependency_list_t::~dependency_list_t()
