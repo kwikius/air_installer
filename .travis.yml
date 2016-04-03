@@ -20,10 +20,13 @@ before_install:
    - unzip install_test.zip
    - cd air_installer-install_test
    - make clean && make CXX="g++-4.8"
-   - mkdir $HOME/ap_lib
-   - mkdir $HOME/ap_bin
+   - mkdir /home/travis/ap_lib
+   - mkdir /home/travis/ap_bin
    - make execute
-   - compiler = "$HOME/ap_bin/gcc-arm-none-eabi-5_2-2015q4"
-   - cd $HOME/ap_lib/quantracker && make osd_libs
+   - cd ../../
+
+install:
+
+   - cd /home/travis/ap_lib/quantracker && make osd_libs
    
-script:  "$HOME/ap_bin/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-g++ --version"
+script:  home/travis/ap_bin/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-g++ --version
