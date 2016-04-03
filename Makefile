@@ -47,5 +47,11 @@ bin/$(TARGET) : $(objects)
 execute: bin/$(TARGET)
 	bin/$(TARGET) --bin-dir $$HOME/ap_bin --lib-dir $$HOME/ap_lib
 
+make_libs : execute
+	cd $$HOME/ap_lib/quantracker && make osd_libs
+
+make_clean_libs: 
+	cd $$HOME/ap_lib/quantracker && make clean_osd_libs
+
 clean:
 	rm -rf obj/*.o bin/$(TARGET)
