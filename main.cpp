@@ -137,5 +137,6 @@ int main(int argc , const char* argv[])
       }
    }catch (std::exception & e){
       std::cerr << "ERROR : \"" << e.what() << "\"\n ...quitting\n\n";
+      return EXIT_FAILURE
    }
 }
