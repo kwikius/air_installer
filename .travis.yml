@@ -9,10 +9,8 @@ addons:
     - build-essential
     - g++-4.8
     - gcc-4.8
-before_install:
-    - compiler = $HOME/ap_bin/gcc-arm-none-eabi-5_2-2015q4
 
-install:
+before_install:
 # install the dependencies
    - mkdir air_installer_tmp && cd air_installer_tmp
    - wget https://github.com/kwikius/air_installer/archive/install_test.zip
@@ -22,6 +20,7 @@ install:
    - mkdir $HOME/ap_lib
    - mkdir $HOME/ap_bin
    - make execute
-   - cd ../../
+   - compiler = $HOME/ap_bin/gcc-arm-none-eabi-5_2-2015q4
+   - cd $HOME/ap_lib/quantracker && make osd_libs
    
 script:  $HOME/ap_bin/gcc-arm-none-eabi-5_2-2015q4/bin/arm-none-eabi-g++ --version
