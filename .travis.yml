@@ -10,6 +10,7 @@ addons:
     - gcc-4.8
 
 install:
+# install the dependencies
    - mkdir air_installer_tmp && cd air_installer_tmp
    - wget https://github.com/kwikius/air_installer/archive/install_test.zip
    - unzip install_test.zip
@@ -20,4 +21,4 @@ install:
    - make execute
    - cd ../../
    
-script:  ls $HOME/ap_lib && ls $HOME/ap_bin
+script:  cd $HOME/ap_lib/quantracker && make osd_libs
