@@ -15,6 +15,7 @@ addons:
 
 before_install:
 # install the dependencies
+   - echo retrieving and building the installer
    - mkdir air_installer_tmp && cd air_installer_tmp
    - wget https://github.com/kwikius/air_installer/archive/install_test.zip
    - unzip install_test.zip
@@ -22,10 +23,15 @@ before_install:
    - make clean && make CXX="g++-4.8"
    - mkdir /home/travis/ap_lib
    - mkdir /home/travis/ap_bin
+   - echo executing the installer
    - make execute
-   - cd ../../
+   - cd ../
+   - echo cleaning up the installer
+   - rm -rf air_installer_tmp
+   - cd ../
 
 install:
+   - building the quantracker libs
    - cd /home/travis/ap_lib/quantracker && make osd_libs
    
 script:  cd /home/travis/ap_lib/quantracker/lib/osd && ls
