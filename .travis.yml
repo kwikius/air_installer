@@ -31,7 +31,7 @@ before_install:
    - cd ../
 
 install:
-   - building the quantracker libs
+   - echo building the quantracker libs
    - cd /home/travis/ap_lib/quantracker && make osd_libs
    
 script:  cd /home/travis/ap_lib/quantracker/lib/osd && ls
