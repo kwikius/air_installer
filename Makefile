@@ -45,7 +45,7 @@ bin/$(TARGET) : $(objects)
 	$(LD) $(LDFLAGS) -o $@ $(objects)
 
 execute: bin/$(TARGET)
-	bin/$(TARGET)
+	bin/$(TARGET) --bin-dir $HOME/ap_bin --lib-dir $HOME/ap_lib
 
 clean:
 	rm -rf obj/*.o bin/$(TARGET)
