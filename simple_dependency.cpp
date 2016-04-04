@@ -127,7 +127,7 @@ bool simple_dependency_t::stage_dir()
       throw std::runtime_error("decompress failed\n");
    }  else{
       
-      std::cout << tabs << "OK;   // (unzip successful)\n";
+      statement("OK;   // (unzip successful)");
       change_wkg_dir_to(old_wkg_dir);
       pop_fun();
       return true;
@@ -143,7 +143,7 @@ bool simple_dependency_t::move_dir()
        stage_dir();
     }
     // move staged dir to target dir
-    std::cout << tabs << "// installing  " + m_target_name + " to " + get_target_dir() << "...\n";
+    push_fun("moving", m_target_name + "," + get_target_dir());
     std::string old_wkg_dir = get_working_dir();
     change_wkg_dir_to(get_platform()->get_temp_dir());
     std::string cmd = "mv " + staged_path + " " + get_target_dir() + m_target_name;
@@ -151,6 +151,8 @@ bool simple_dependency_t::move_dir()
       change_wkg_dir_to(old_wkg_dir);
       throw std::runtime_error("move failed\n");
     }else{
+      statement("OK;   // (" +  m_target_name + " moved to " + get_target_dir() + ")");
+      pop_fun();
       change_wkg_dir_to(old_wkg_dir);
       return true;
     }
@@ -159,7 +161,7 @@ bool simple_dependency_t::move_dir()
 bool simple_dependency_t::install()
 {
     push_fun("install",m_target_name);
-    std::cout << tabs << "// Checking for existence of " << m_target_name << " ...\n";
+    statement("// Checking for previous installation of " + m_target_name + "...");
     std::string installed_path = get_target_dir() + m_target_name;
     if (! dir_exists(installed_path) ){
       if (! move_dir()){
@@ -167,7 +169,7 @@ bool simple_dependency_t::install()
       }
     }
    
-    std::cout << tabs << "OK;   // (" << m_target_name << " is installed in " << get_target_dir() << ")\n";
+    statement("OK;   // (" +  m_target_name + " is installed in " + get_target_dir() + ")");
     pop_fun();
     return true;
 }
