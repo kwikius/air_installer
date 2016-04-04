@@ -104,11 +104,18 @@ int main(int argc , const char* argv[])
 {
    try{
       std::cout << "\n\n##################################";
-      std::cout << "\nQuantracker APM air installer V1.0";
+      std::cout << "\nQuantracker installer V1.0";
       std::cout << "\n##################################\n\n";
-      push_fun("install_package","quantracker");
+      push_fun("install_package","quantracker-dependencies");
 
-      // checking for required shell apps
+      // TODO add checking for required shell apps
+      // wget
+      // unzip
+      // mv
+      // mkdir
+      // tar
+      // rmdir
+      // rm
 
       dependency_list_t deps;
 
