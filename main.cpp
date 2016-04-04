@@ -4,6 +4,7 @@
 #include "platform.hpp"
 #include "dependency_list.hpp"
 #include "file_utils.hpp"
+#include "tabs_setting.hpp"
 
 //dummy
 
@@ -97,13 +98,16 @@ bool parse_args(int argc , const char* argv[])
 //
 }// namespace
 
+tabs_setting_t tabs{3};
+
 int main(int argc , const char* argv[])
 {
    try{
+      std::cout << "\n\n##################################";
+      std::cout << "\nQuantracker APM air installer V1.0";
+      std::cout << "\n##################################\n\n";
+      push_fun("install_package","quantracker");
 
-      std::cout << "\n########################################################\n";
-      std::cout << "Quantracker APM air installer V1.0 on " <<  get_platform()->get_OS() << " starting\n";
-      std::cout << "########################################################\n\n";
       // checking for required shell apps
 
       dependency_list_t deps;
@@ -121,16 +125,17 @@ int main(int argc , const char* argv[])
          deps.add(dependency_t::QUANTRACKER);
 
          if ( deps.install() ){
-
-            std::cout << "Install was successful...\n\n";
-            std::cout << "libraries are in " << get_platform()->get_lib_dir() <<'\n';
-            std::cout << "binaries  are in " << get_platform()->get_bin_dir() << "\n\n";
-            std::cout << "########################################################\n";
-            std::cout << "Quantracker APM air installer V1.0 on " <<  get_platform()->get_OS() << " completed successfully\n";
-            std::cout << "########################################################\n\n\n";
+            statement("");
+            statement("#########################################################");
+            statement("Install was successful");
+            statement("libraries are in " + get_platform()->get_lib_dir());
+            statement("binaries  are in " + get_platform()->get_bin_dir());
+            statement("#########################################################");
+            statement("");
             cleanup();
-
-         return EXIT_SUCCESS;
+            pop_fun();
+            statement("");
+            return EXIT_SUCCESS;
        }
       }else{
          return EXIT_FAILURE;

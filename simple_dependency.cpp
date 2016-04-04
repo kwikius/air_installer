@@ -9,6 +9,7 @@
 #include "stage.hpp"
 #include "platform.hpp"
 #include "file_utils.hpp"
+#include "tabs_setting.hpp"
 
 std::string simple_dependency_t::get_target_dir()
 {
@@ -33,7 +34,8 @@ bool simple_dependency_t::retrieve_file()
      download_flags += "--no-check-certificate ";
    }
    #endif
-   std::cout << "<--<--<-- (retrieving " << m_target_name << " ... ) <--<--<--\n";
+   push_fun("retrieving", m_target_name);
+   //std::cout << "retrieving(" << m_target_name << " ... )\n{\n";
    std::string cmd = "wget " + download_flags + " --directory-prefix=" + get_platform()->get_temp_dir()
       + " " + m_src_dir_url + m_src_filename + " --output-document=" + m_unzip_rename;
 
@@ -90,8 +92,9 @@ bool simple_dependency_t::retrieve_file()
       change_wkg_dir_to(old_wkg_dir);
       throw std::runtime_error("wget failed");
    }
-   std::cout << "-->-->-->-->-->-->\n";
-   std::cout << "   OK;   // (retrieve successful)\n";
+
+   std::cout << tabs << "OK;   // (retrieve successful)\n";
+   pop_fun();
    change_wkg_dir_to(old_wkg_dir);
    return true;
 }
@@ -110,7 +113,7 @@ bool simple_dependency_t::stage_dir()
    // stage here ( uncompress/extract the dir from compressed file)
    std::string old_wkg_dir = get_working_dir();
    change_wkg_dir_to(get_platform()->get_temp_dir());
-   std::cout << "<--<--<-- ( unzipping " << retrieved_url << " ... ) <--<--<--\n";
+   push_fun("unzipping", retrieved_url);
    std::string cmd ;
    if ( m_flags & compressed_type_bz2){
       cmd = "tar xjf " + retrieved_url;
@@ -123,9 +126,10 @@ bool simple_dependency_t::stage_dir()
       change_wkg_dir_to(old_wkg_dir);
       throw std::runtime_error("decompress failed\n");
    }  else{
-      std::cout << "-->-->-->-->-->-->\n";
-      std::cout << "   OK;   // (unzip successful)\n";
+      
+      std::cout << tabs << "OK;   // (unzip successful)\n";
       change_wkg_dir_to(old_wkg_dir);
+      pop_fun();
       return true;
    }
 }
@@ -139,7 +143,7 @@ bool simple_dependency_t::move_dir()
        stage_dir();
     }
     // move staged dir to target dir
-    std::cout << "         // installing  " + m_target_name + " to " + get_target_dir() << "...\n";
+    std::cout << tabs << "// installing  " + m_target_name + " to " + get_target_dir() << "...\n";
     std::string old_wkg_dir = get_working_dir();
     change_wkg_dir_to(get_platform()->get_temp_dir());
     std::string cmd = "mv " + staged_path + " " + get_target_dir() + m_target_name;
@@ -154,8 +158,8 @@ bool simple_dependency_t::move_dir()
 
 bool simple_dependency_t::install()
 {
-    std::cout << "install(" << m_target_name << ")\n{\n";
-    std::cout << "         // Checking for existence of " << m_target_name << " ...\n";
+    push_fun("install",m_target_name);
+    std::cout << tabs << "// Checking for existence of " << m_target_name << " ...\n";
     std::string installed_path = get_target_dir() + m_target_name;
     if (! dir_exists(installed_path) ){
       if (! move_dir()){
@@ -163,8 +167,8 @@ bool simple_dependency_t::install()
       }
     }
    
-    std::cout << "   OK;   // (" << m_target_name << " is installed in " << get_target_dir() << ")\n";
-    std::cout << "}\n\n";
+    std::cout << tabs << "OK;   // (" << m_target_name << " is installed in " << get_target_dir() << ")\n";
+    pop_fun();
     return true;
 }
 
