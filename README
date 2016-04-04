@@ -11,10 +11,16 @@ The app currently only builds on Cygwin
 
 For each of these packages , it should be checked that
 the following cmd line apps are installed
+    g++  >= 4.7
     make
     wget
     unzip
     tar
+    mkdir
+    mv
+    mkdir
+    rmdir
+    rm
 
 For Native Linux
   Most linux distros should already have all these basic apps installed
