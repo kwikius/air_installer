@@ -34,7 +34,6 @@ bool dependency_list_t::install()
     if ( !m_dependency_map[i]->install()){
       return false;
     }
-    std::cout << "\n";
   } 
   return make_dependencies_mk();
 }

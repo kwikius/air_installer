@@ -125,16 +125,15 @@ int main(int argc , const char* argv[])
          deps.add(dependency_t::QUANTRACKER);
 
          if ( deps.install() ){
-            statement("");
+ 
             statement("#########################################################");
             statement("Install was successful");
             statement("libraries are in " + get_platform()->get_lib_dir());
             statement("binaries  are in " + get_platform()->get_bin_dir());
             statement("#########################################################");
-            statement("");
             cleanup();
             pop_fun();
-            statement("");
+
             return EXIT_SUCCESS;
        }
       }else{

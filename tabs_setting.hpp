@@ -50,7 +50,7 @@ inline void push_fun(std::string const & fun_name, std::string const & args = ""
 inline void pop_fun()
 {
    tabs.decr();
-   std::cout << tabs <<"}\n";
+   std::cout << tabs <<"}\n\n";
 }
 
 inline void statement(std::string const & str)
