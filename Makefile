@@ -50,8 +50,14 @@ execute: bin/$(TARGET)
 make_libs : execute
 	cd $$HOME/ap_lib/quantracker && make osd_libs
 
+make_aerflite_libs : execute
+	cd $$HOME/ap_lib/quantracker && make AERFLITE=True osd_libs
+
 make_clean_libs: 
 	cd $$HOME/ap_lib/quantracker && make clean_osd_libs
+
+make_clean_aerflite_libs: 
+	cd $$HOME/ap_lib/quantracker && make AERFLITE=True clean_osd_libs
 
 clean:
 	rm -rf obj/*.o bin/$(TARGET)
