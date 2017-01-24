@@ -11,6 +11,12 @@
 #include "file_utils.hpp"
 #include "tabs_setting.hpp"
 
+namespace {
+   std::string freertos_version_name = "FreeRTOSv9.0.0";
+}
+
+std::string const & get_freertos_version_name() { return freertos_version_name;}
+
 std::string simple_dependency_t::get_target_dir()
 {
     if ( m_flags & target_dir_bin){
@@ -199,10 +205,10 @@ dependency_t* make_dependency_freertos()
     return new simple_dependency_t{
          dependency_t::FREERTOS
         , get_zoomworks_deps_dir()
-         ,"FreeRTOSV8.2.3.zip"
-         ,"FreeRTOSV8.2.3.zip"
-         ,"FreeRTOSV8.2.3"
-         ,"FreeRTOSV8.2.3"
+         ,get_freertos_version_name() + ".zip"
+         ,get_freertos_version_name() + ".zip"
+         ,get_freertos_version_name()
+         ,get_freertos_version_name()
          , simple_dependency_t::compressed_type_zip
          | simple_dependency_t::uncompressed_type_dir
          | simple_dependency_t::target_dir_lib

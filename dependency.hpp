@@ -2,6 +2,7 @@
 #define AIR_INSTALLER_DEPENDENCY_HPP_INCLUDED
 
 #include <vector>
+#include <string>
 
 struct dependency_t{
 
@@ -25,6 +26,10 @@ struct dependency_t{
    private:
       int m_id;
 };
+
+std::string const & get_gcc_arm_none_eabi_version_name();
+std::string const & get_gcc_arm_none_eabi_version_number();
+std::string const & get_freertos_version_name();
 
 
 #endif // AIR_INSTALLER_DEPENDENCY_HPP_INCLUDED

@@ -10,6 +10,21 @@
 #include "platform.hpp"
 #include "file_utils.hpp"
 
+namespace {
+
+   std::string const gcc_arm_none_eabi_version_name = "gcc-arm-none-eabi-5_2-2015q4";
+   std::string const gcc_arm_none_eabi_version_number ="5.2.1";
+#if defined(AIR_INSTALLER_PLATFORM_WINDOWS)
+   std::string const gcc_arm_none_eabi_win_suffix =  "-20151219-win32.zip";
+#else
+   std::string const gcc_arm_none_eabi_linux_suffix =  "-20151219-linux.tar.bz2";
+#endif
+
+}
+
+std::string const & get_gcc_arm_none_eabi_version_name() { return gcc_arm_none_eabi_version_name;}
+std::string const & get_gcc_arm_none_eabi_version_number() { return gcc_arm_none_eabi_version_number;}
+
 #if defined(AIR_INSTALLER_PLATFORM_WINDOWS)
 /*
 for Windows we need to create a subdir of the temp dir
@@ -18,16 +33,22 @@ for Windows we need to create a subdir of the temp dir
   so we derive from the simple_dependency and override just the stage_dir function.
   This makes it compatible with the bzip version
 */
+
+
 struct dep_arm_none_eabi : simple_dependency_t{
 
    dep_arm_none_eabi()
    :simple_dependency_t{
          dependency_t::ARM_NONE_EABI_GCC
          ,get_zoomworks_platform_deps_dir()
-         ,"gcc-arm-none-eabi-5_2-2015q4-20151219-win32.zip"
-         ,"gcc-arm-none-eabi-5_2-2015q4-20151219-win32.zip"
-         ,"gcc-arm-none-eabi-5_2-2015q4"
-         ,"gcc-arm-none-eabi-5_2-2015q4"
+        // ,"gcc-arm-none-eabi-5_2-2015q4-20151219-win32.zip"
+         ,get_gcc_arm_none_eabi_version_name() + gcc_arm_none_eabi_win_suffix
+        // ,"gcc-arm-none-eabi-5_2-2015q4-20151219-win32.zip"
+         ,get_gcc_arm_none_eabi_version_name() + gcc_arm_none_eabi_win_suffix
+         //,"gcc-arm-none-eabi-5_2-2015q4"
+         ,get_gcc_arm_none_eabi_version_name()
+         //,"gcc-arm-none-eabi-5_2-2015q4"
+         ,get_gcc_arm_none_eabi_version_name()
          , simple_dependency_t::compressed_type_zip
          | simple_dependency_t::uncompressed_type_dir
          | simple_dependency_t::target_dir_bin
@@ -70,16 +91,22 @@ struct dep_arm_none_eabi : simple_dependency_t{
 #if (! defined(AIR_INSTALLER_PLATFORM_UNIX))
 #error "logic error"
 #endif
+
+
 // For Linux simple_dependency_t works ok
    dependency_t* make_dependency_arm_none_eabi_gcc()
 {
     return new simple_dependency_t{
          dependency_t::ARM_NONE_EABI_GCC
          ,get_zoomworks_platform_deps_dir()
-          ,"gcc-arm-none-eabi-5_2-2015q4-20151219-linux.tar.bz2"
-          ,"gcc-arm-none-eabi-5_2-2015q4-20151219-linux.tar.bz2"
-         ,"gcc-arm-none-eabi-5_2-2015q4"
-         ,"gcc-arm-none-eabi-5_2-2015q4"
+          //,"gcc-arm-none-eabi-5_2-2015q4-20151219-linux.tar.bz2"
+         ,get_gcc_arm_none_eabi_version_name() + gcc_arm_none_eabi_linux_suffix
+          //,"gcc-arm-none-eabi-5_2-2015q4-20151219-linux.tar.bz2"
+         ,get_gcc_arm_none_eabi_version_name() + gcc_arm_none_eabi_linux_suffix
+         //,"gcc-arm-none-eabi-5_2-2015q4"
+         ,get_gcc_arm_none_eabi_version_name()
+        // ,"gcc-arm-none-eabi-5_2-2015q4"
+         ,get_gcc_arm_none_eabi_version_name()
          , simple_dependency_t::compressed_type_bz2
          | simple_dependency_t::uncompressed_type_dir
          | simple_dependency_t::target_dir_bin
