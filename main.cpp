@@ -131,6 +131,7 @@ int main(int argc , const char* argv[])
          deps.add(dependency_t::STM32_STDPERIPH_LIBS);
          deps.add(dependency_t::QUAN);
          deps.add(dependency_t::QUANTRACKER);
+         deps.add(dependency_t::MIXER_LANG);
 
          if ( deps.install() ){
  

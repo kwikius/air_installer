@@ -22,6 +22,8 @@ dependency_t* make_dependency( int id)
          return make_dependency_quan();
      case dependency_t::QUANTRACKER:
          return make_dependency_quantracker();
+     case dependency_t::MIXER_LANG:
+         return make_dependency_mixer_lang();
      default:
          assert(false);
          return nullptr;
@@ -57,6 +59,7 @@ bool dependency_list_t::make_dependencies_mk()
       out << "MAVLINK_INCLUDE_PATH = " << lib_dir << '\n';
       out << "FREE_RTOS_DIR = " << lib_dir << get_freertos_version_name() << "/FreeRTOS/\n";
       out << "STM32_STD_PERIPH_LIB_DIR = " << lib_dir << "STM32F4xx_DSP_StdPeriph_Lib_V1.6.1/Libraries/\n\n";
+      out << "MIXER_LANG_PATH = " << lib_dir << "mixer_lang\n";
   }
   std::cout << tabs << "OK;   // (dependencies file written successfully)\n";
   pop_fun();

@@ -259,3 +259,18 @@ dependency_t* make_dependency_quantracker()
          | simple_dependency_t::target_dir_lib
     };
 }
+
+dependency_t* make_dependency_mixer_lang()
+{
+    return new simple_dependency_t{
+         dependency_t::QUAN
+         ,"https://github.com/kwikius/mixer_lang/archive/"
+         ,"master.zip"
+         ,"mixer_lang-master.zip"
+         ,"mixer_lang-master"
+         ,"mixer_lang"
+         , simple_dependency_t::compressed_type_zip
+         | simple_dependency_t::uncompressed_type_dir
+         | simple_dependency_t::target_dir_lib
+    };
+}

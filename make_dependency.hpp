@@ -9,4 +9,5 @@ dependency_t* make_dependency_freertos();
 dependency_t* make_dependency_stm32_stdperiph_libs();
 dependency_t* make_dependency_quan();
 dependency_t* make_dependency_quantracker();
+dependency_t* make_dependency_mixer_lang();
 #endif // MAKE_DEPENDENCY_HPP_INCLUDED

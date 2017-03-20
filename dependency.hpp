@@ -14,6 +14,7 @@ struct dependency_t{
       ,MAVLINK
       ,QUAN
       ,QUANTRACKER
+      ,MIXER_LANG
    };
    
    dependency_t(int id);
